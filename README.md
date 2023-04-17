@@ -2,9 +2,8 @@
 An email manager for Tangerine
 
 
-
+## heres a general idea for the class
 ```python
-# heres the work in progress for the class
 import re
 import smtplib
 
@@ -58,5 +57,37 @@ class Bergamot:
             return f'Email sent to {recipient}!'
         except:
             raise ValueError('Failed to send email')
+
+```
+
+
+
+## Here's how you would use it.
+
+```python
+from tangerine import Tangerine, Router
+from bergamot import Bergamot
+
+tangerine = Tangerine()
+router = Router()
+
+bergamot = Bergamot('youremail@gmail.com', 'yourpassword')
+
+router.post('/send-email', lambda ctx:
+    try:
+        message = ctx.req.form.get('message')
+        recipient = ctx.req.form.get('recipient')
+        result = bergamot.send_email(recipient, message)
+        ctx.body = result
+        ctx.send(200)
+    except ValueError as e:
+        ctx.body = str(e)
+        ctx.send(400)
+)
+
+tangerine.use(router)
+
+if __name__ == '__main__':
+    tangerine.start()
 
 ```
